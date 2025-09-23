@@ -94,10 +94,10 @@ public class NumberTriangle {
         String direction = String.valueOf(path.charAt(0));
         path = path.substring(1);
         if (direction.equals("l") && left != null) {
-            return left.retrieve(path.substring(1));
+            return left.retrieve(path);
         }
         else if (direction.equals("r") && right != null) {
-            return right.retrieve(path.substring(1));
+            return right.retrieve(path);
         }
         else {
             return -1;
