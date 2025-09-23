@@ -119,7 +119,6 @@ public class NumberTriangle {
         String line = br.readLine();
         while (line != null) {
 
-            // TODO process the line
             if (top == null) {
                 top = new NumberTriangle(Integer.parseInt(line));
                 previousParts.put(0, top);
