@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.HashMap;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -110,20 +111,30 @@ public class NumberTriangle {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
 
-        // TODO define any variables that you want to use to store things
-
-        // will need to return the top of the NumberTriangle,
-        // so might want a variable for that.
+        String[] parts;
+        HashMap<Integer, NumberTriangle> previousParts = new HashMap<>();
+        HashMap<Integer, NumberTriangle> numberTriangleParts = new HashMap<>();
         NumberTriangle top = null;
 
         String line = br.readLine();
         while (line != null) {
 
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
-
             // TODO process the line
-
+            if (top == null) {
+                top = new NumberTriangle(Integer.parseInt(line));
+                previousParts.put(0, top);
+            }
+            else {
+                parts = line.split(" ");
+                for (int i = 1; i < parts.length - 1; i++) {
+                    NumberTriangle nt = new NumberTriangle(Integer.parseInt(parts[i]));
+                    numberTriangleParts.put(i, nt);
+                    previousParts.get(i).setLeft(numberTriangleParts.get(i - 1));
+                    previousParts.get(i).setRight(numberTriangleParts.get(i));
+                }
+                previousParts = numberTriangleParts;
+                numberTriangleParts.clear();
+            }
             //read the next line
             line = br.readLine();
         }
