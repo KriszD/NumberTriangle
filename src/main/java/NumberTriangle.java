@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -111,31 +112,38 @@ public class NumberTriangle {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
 
-        String[] parts;
-        HashMap<Integer, NumberTriangle> previousParts = new HashMap<>();
-        HashMap<Integer, NumberTriangle> numberTriangleParts = new HashMap<>();
+        ArrayList<ArrayList<NumberTriangle>> lines = new ArrayList<>();
+        int lineNumber = 0;
         NumberTriangle top = null;
 
         String line = br.readLine();
         while (line != null) {
-
             if (top == null) {
-                top = new NumberTriangle(Integer.parseInt(line));
-                previousParts.put(0, top);
+                ArrayList<NumberTriangle> firstLine = new ArrayList<>();
+                lines.add(firstLine);
+                firstLine.add(new NumberTriangle(Integer.parseInt(line)));
+                top = firstLine.get(0);
             }
             else {
-                parts = line.split(" ");
-                for (int i = 1; i < parts.length - 1; i++) {
-                    NumberTriangle nt = new NumberTriangle(Integer.parseInt(parts[i]));
-                    numberTriangleParts.put(i, nt);
-                    previousParts.get(i).setLeft(numberTriangleParts.get(i - 1));
-                    previousParts.get(i).setRight(numberTriangleParts.get(i));
+                String[] numbers = line.split(" ");
+                ArrayList<NumberTriangle> newLine = new ArrayList<>();
+                lines.add(newLine);
+                ArrayList<NumberTriangle> prevLine = lines.get(lineNumber - 1);
+                for (int i = 0; i < numbers.length; i++){
+                    NumberTriangle nt = new NumberTriangle(Integer.parseInt(numbers[i]));
+                    newLine.add(nt);
+                    if (i > 0) {
+                        prevLine.get(i - 1).setRight(nt);
+                    }
+                    if (i < prevLine.size()) {
+                        prevLine.get(i).setLeft(nt);
+                    }
                 }
-                previousParts = numberTriangleParts;
-                numberTriangleParts.clear();
             }
+
             //read the next line
             line = br.readLine();
+            lineNumber++;
         }
         br.close();
         return top;
