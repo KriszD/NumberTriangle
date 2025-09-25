@@ -1,7 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-
-import static java.lang.Math.min;
+import java.util.HashMap;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -91,20 +89,8 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        if (path.isEmpty()) {
-            return root;
-        }
-        String direction = String.valueOf(path.charAt(0));
-        path = path.substring(1);
-        if (direction.equals("l") && left != null) {
-            return left.retrieve(path);
-        }
-        else if (direction.equals("r") && right != null) {
-            return right.retrieve(path);
-        }
-        else {
-            return -1;
-        }
+        // TODO implement this method
+        return -1;
     }
 
     /** Read in the NumberTriangle structure from a file.
@@ -125,38 +111,31 @@ public class NumberTriangle {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
 
-        ArrayList<ArrayList<NumberTriangle>> lines = new ArrayList<>();
-        int lineNumber = 0;
+        String[] parts;
+        HashMap<Integer, NumberTriangle> previousParts = new HashMap<>();
+        HashMap<Integer, NumberTriangle> numberTriangleParts = new HashMap<>();
         NumberTriangle top = null;
 
         String line = br.readLine();
         while (line != null) {
+
             if (top == null) {
-                ArrayList<NumberTriangle> firstLine = new ArrayList<>();
-                lines.add(firstLine);
-                firstLine.add(new NumberTriangle(Integer.parseInt(line)));
-                top = firstLine.get(0);
+                top = new NumberTriangle(Integer.parseInt(line));
+                previousParts.put(0, top);
             }
             else {
-                String[] numbers = line.split(" ");
-                ArrayList<NumberTriangle> newLine = new ArrayList<>();
-                lines.add(newLine);
-                ArrayList<NumberTriangle> prevLine = lines.get(lineNumber - 1);
-                for (int i = 0; i < numbers.length; i++){
-                    NumberTriangle nt = new NumberTriangle(Integer.parseInt(numbers[i]));
-                    newLine.add(nt);
-                    if (i > 0) {
-                        prevLine.get(i - 1).setRight(nt);
-                    }
-                    if (i < prevLine.size()) {
-                        prevLine.get(i).setLeft(nt);
-                    }
+                parts = line.split(" ");
+                for (int i = 1; i < parts.length - 1; i++) {
+                    NumberTriangle nt = new NumberTriangle(Integer.parseInt(parts[i]));
+                    numberTriangleParts.put(i, nt);
+                    previousParts.get(i).setLeft(numberTriangleParts.get(i - 1));
+                    previousParts.get(i).setRight(numberTriangleParts.get(i));
                 }
+                previousParts = numberTriangleParts;
+                numberTriangleParts.clear();
             }
-
             //read the next line
             line = br.readLine();
-            lineNumber++;
         }
         br.close();
         return top;
