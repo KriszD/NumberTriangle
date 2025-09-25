@@ -1,4 +1,7 @@
 import java.io.*;
+import java.util.ArrayList;
+
+import static java.lang.Math.min;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -122,22 +125,38 @@ public class NumberTriangle {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
 
-        // TODO define any variables that you want to use to store things
-
-        // will need to return the top of the NumberTriangle,
-        // so might want a variable for that.
+        ArrayList<ArrayList<NumberTriangle>> lines = new ArrayList<>();
+        int lineNumber = 0;
         NumberTriangle top = null;
 
         String line = br.readLine();
         while (line != null) {
-
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
-
-            // TODO process the line
+            if (top == null) {
+                ArrayList<NumberTriangle> firstLine = new ArrayList<>();
+                lines.add(firstLine);
+                firstLine.add(new NumberTriangle(Integer.parseInt(line)));
+                top = firstLine.get(0);
+            }
+            else {
+                String[] numbers = line.split(" ");
+                ArrayList<NumberTriangle> newLine = new ArrayList<>();
+                lines.add(newLine);
+                ArrayList<NumberTriangle> prevLine = lines.get(lineNumber - 1);
+                for (int i = 0; i < numbers.length; i++){
+                    NumberTriangle nt = new NumberTriangle(Integer.parseInt(numbers[i]));
+                    newLine.add(nt);
+                    if (i > 0) {
+                        prevLine.get(i - 1).setRight(nt);
+                    }
+                    if (i < prevLine.size()) {
+                        prevLine.get(i).setLeft(nt);
+                    }
+                }
+            }
 
             //read the next line
             line = br.readLine();
+            lineNumber++;
         }
         br.close();
         return top;
