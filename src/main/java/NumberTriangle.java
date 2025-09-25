@@ -90,8 +90,20 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        // TODO implement this method
-        return -1;
+        if (path.isEmpty()) {
+            return root;
+        }
+        String direction = String.valueOf(path.charAt(0));
+        path = path.substring(1);
+        if (direction.equals("l") && left != null) {
+            return left.retrieve(path);
+        }
+        else if (direction.equals("r") && right != null) {
+            return right.retrieve(path);
+        }
+        else {
+            return -1;
+        }
     }
 
     /** Read in the NumberTriangle structure from a file.
